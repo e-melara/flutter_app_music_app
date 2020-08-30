@@ -6,9 +6,9 @@ class ProgressDialog {
   ProgressDialog(this.context);
 
   void show() {
-    showDialog(
+    showCupertinoDialog(
       context: this.context,
-      child: Container(
+      builder: (BuildContext context) => Container(
         width: double.infinity,
         height: double.infinity,
         color: Colors.white.withOpacity(0.7),

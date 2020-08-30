@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "448836361068",
+    "firebase_url": "https://flutterapp-70d15.firebaseio.com",
+    "project_id": "flutterapp-70d15",
+    "storage_bucket": "flutterapp-70d15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448836361068:android:654fc7058696edf1597149",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app_music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448836361068-kq4rv31rrlrmtj5pa702dks9ff2jsehp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_app_music_app",
+            "certificate_hash": "7a2b608a48dee75827ecbf8dc22527dee76b8704"
+          }
+        },
+        {
+          "client_id": "448836361068-sbhfdbrf71tdvtcooucj0tviic88fsel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtChVF3XwWEXwaS50pXof_UCA3ChjCFDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448836361068-sbhfdbrf71tdvtcooucj0tviic88fsel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

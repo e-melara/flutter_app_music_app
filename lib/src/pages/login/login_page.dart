@@ -6,6 +6,7 @@ import 'package:flutter_app_music_app/src/utils/responsive.dart';
 import 'package:flutter_app_music_app/src/utils/services.dart';
 
 class LoginPage extends StatefulWidget {
+  static final String routeName = 'login';
   LoginPage({Key key}) : super(key: key);
 
   @override

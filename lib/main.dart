@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_music_app/src/pages/login/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'package:flutter_app_music_app/src/pages/custom_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -11,8 +15,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(),
-      home: LoginPage(),
+      initialRoute: SplashPage.routeName,
+      routes: {
+        HomePage.routeName: (_) => HomePage(),
+        LoginPage.routeName: (_) => LoginPage(),
+        SplashPage.routeName: (_) => SplashPage(),
+      },
     );
   }
 }

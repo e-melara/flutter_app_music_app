@@ -1,11 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_music_app/src/pages/login/widgets/input_text_login.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter_app_music_app/src/providers/auth.dart';
 import 'package:flutter_app_music_app/src/utils/responsive.dart';
+import 'package:flutter_app_music_app/src/pages/home/home_page.dart';
 import 'package:flutter_app_music_app/src/widgets/circle_button.dart';
 import 'package:flutter_app_music_app/src/widgets/rounded_button.dart';
+import 'package:flutter_app_music_app/src/pages/login/widgets/input_text_login.dart';
 
 class LoginForm extends StatelessWidget {
+  void _goTo(BuildContext context, User user) {
+    if (user != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, HomePage.routeName, (route) => false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
@@ -51,16 +62,21 @@ class LoginForm extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleButton(
-                  size: 55,
-                  iconPath: "assets/pages/login/icons/facebook.svg",
-                  backgroundColor: Color(0xff448AFF),
-                ),
-                SizedBox(width: responsive.ip(3.0)),
+                // CircleButton(
+                //   size: 55,
+                //   iconPath: "assets/pages/login/icons/facebook.svg",
+                //   backgroundColor: Color(0xff448AFF),
+                //   onPress: () {},
+                // ),
+                // SizedBox(width: responsive.ip(3.0)),
                 CircleButton(
                   size: 55,
                   iconPath: "assets/pages/login/icons/google.svg",
                   backgroundColor: Color(0xffFF1744),
+                  onPress: () async {
+                    final user = await Auth.instance.google(context);
+                    _goTo(context, user);
+                  },
                 ),
               ],
             ),

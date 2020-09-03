@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app_music_app/src/providers/auth.dart';
 import 'package:flutter_app_music_app/src/utils/app_colors.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app_music_app/src/utils/dialogs.dart';
+import 'package:flutter_app_music_app/src/utils/extra.dart';
 import 'package:flutter_app_music_app/src/utils/responsive.dart';
+import 'package:flutter_app_music_app/src/pages/custom_page.dart';
 import 'package:flutter_app_music_app/src/widgets/rounded_button.dart';
 import 'package:flutter_app_music_app/src/pages/login/widgets/input_text_login.dart';
 
@@ -19,6 +24,63 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   bool _agree = false;
+  GlobalKey<InputTextLoginState> _username = GlobalKey();
+  GlobalKey<InputTextLoginState> _email = GlobalKey();
+  GlobalKey<InputTextLoginState> _password = GlobalKey();
+  GlobalKey<InputTextLoginState> _vpassword = GlobalKey();
+
+  void _goTo(BuildContext context, User user) {
+    if (user != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, HomePage.routeName, (route) => false);
+    } else {
+      print("Register faild");
+    }
+  }
+
+  void _submit() async {
+    final bool validate = _validate();
+
+    if (validate) {
+      if (_agree) {
+        final values = _getObject();
+        final User user = await Auth.instance.signUp(
+          context,
+          email: values['email'],
+          password: values['password'],
+          username: values['username'],
+        );
+        _goTo(context, user);
+      } else {
+        Dialogs.alert(
+          context,
+          description: 'You need to accept the terms and conditions',
+        );
+      }
+    } else {
+      Dialogs.alert(
+        context,
+        description: 'Some fields are invalid',
+      );
+    }
+  }
+
+  bool _validate() {
+    return (_username.currentState.isOk &&
+        _email.currentState.isOk &&
+        _password.currentState.isOk &&
+        _vpassword.currentState.isOk);
+  }
+
+  Map<String, String> _getObject() {
+    return {
+      "email": _email.currentState.value.trim(),
+      "username": _username.currentState.value.trim(),
+      "password": _password.currentState.value.trim(),
+      "vpassword": _vpassword.currentState.value.trim(),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
@@ -53,6 +115,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               SizedBox(height: responsive.ip(2.7)),
               InputTextLogin(
+                key: _username,
                 placeholder: "Username",
                 iconPath: "assets/pages/login/icons/avatar.svg",
                 validator: (text) {
@@ -61,18 +124,33 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               SizedBox(height: responsive.ip(2.7)),
               InputTextLogin(
-                iconPath: "assets/pages/login/icons/email.svg",
+                key: _email,
                 placeholder: "Email Address",
+                keyInputType: TextInputType.emailAddress,
+                iconPath: "assets/pages/login/icons/email.svg",
+                validator: (value) => Extra.isValidEmail(value),
               ),
               SizedBox(height: responsive.ip(2.7)),
               InputTextLogin(
-                iconPath: "assets/pages/login/icons/key.svg",
+                key: _password,
+                isSecure: true,
                 placeholder: "Password",
+                iconPath: "assets/pages/login/icons/key.svg",
+                validator: (value) {
+                  _vpassword.currentState?.checkoutValidation();
+                  return value.trim().length >= 6;
+                },
               ),
               SizedBox(height: responsive.ip(2.7)),
               InputTextLogin(
-                iconPath: "assets/pages/login/icons/key.svg",
+                isSecure: true,
+                key: _vpassword,
                 placeholder: "Confirm Password",
+                iconPath: "assets/pages/login/icons/key.svg",
+                validator: (value) {
+                  return value.trim().length >= 6 &&
+                      value == _password.currentState.value;
+                },
               ),
               SizedBox(height: responsive.ip(2.9)),
               DefaultTextStyle(
@@ -126,7 +204,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                   SizedBox(width: 10.0),
                   RoundedButton(
-                    onPress: () {},
+                    onPress: _submit,
                     title: "Sign Up",
                   ),
                 ],

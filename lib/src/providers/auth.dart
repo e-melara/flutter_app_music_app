@@ -38,7 +38,32 @@ class Auth {
     return null;
   }
 
-  // Email y Password
+  Future<User> loginByPassword(
+    BuildContext context, {
+    @required String email,
+    @required String password,
+  }) async {
+    final progress = ProgressDialog(context);
+    try {
+      progress.show();
+      final UserCredential result = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      if (user != null) {
+        progress.dismiss();
+        return result.user;
+      }
+      progress.dismiss();
+      return null;
+    } catch (e) {
+      print(e);
+      progress.dismiss();
+      //todo:pendiente la informacion de los errores con firebase
+      // Dialogs.alert(context, title: "ERROR", description: e);
+      return null;
+    }
+  }
+
   Future<User> signUp(
     BuildContext context, {
     @required String email,
@@ -55,11 +80,21 @@ class Auth {
         progress.dismiss();
         return result.user;
       }
+      progress.dismiss();
+      return null;
     } catch (e) {
+      //todo:pendiente la informacion de los errores con firebase
+      String message = "Unknown error";
+      if (e.code == "ERROR_EMAIL_ALREADY_IN_USE") {
+        message = e.message;
+      } else if (e.code == "ERROR_WEAK_PASSWORD") {
+        message = e.message;
+      }
       print(e);
+      progress.dismiss();
+      Dialogs.alert(context, title: "ERROR", description: message);
+      return null;
     }
-    progress.dismiss();
-    return null;
   }
 
   Future<bool> sendResetEmailLink(

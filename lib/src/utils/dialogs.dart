@@ -1,6 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class Dialogs {
+  static void alert(
+    BuildContext context, {
+    String title,
+    String description,
+  }) {
+    showDialog(
+      context: context,
+      child: CupertinoAlertDialog(
+        title: title == null ? null : Text(title),
+        content: description == null ? null : Text(description),
+        actions: [
+          CupertinoDialogAction(
+            child: Text('Ok'),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class ProgressDialog {
   final BuildContext context;
   ProgressDialog(this.context);

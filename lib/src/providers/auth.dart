@@ -16,6 +16,7 @@ class Auth {
     return (_firebaseAuth).currentUser;
   }
 
+  // Redes sociales
   Future<User> google(BuildContext context) async {
     try {
       final progress = ProgressDialog(context);
@@ -37,6 +38,48 @@ class Auth {
     return null;
   }
 
+  // Email y Password
+  Future<User> signUp(
+    BuildContext context, {
+    @required String email,
+    @required String password,
+    @required String username,
+  }) async {
+    final progress = ProgressDialog(context);
+    try {
+      progress.show();
+      final UserCredential result = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      if (user != null) {
+        await result.user.updateProfile(displayName: username);
+        progress.dismiss();
+        return result.user;
+      }
+    } catch (e) {
+      print(e);
+    }
+    progress.dismiss();
+    return null;
+  }
+
+  Future<bool> sendResetEmailLink(
+    BuildContext context, {
+    @required String email,
+  }) async {
+    final progress = ProgressDialog(context);
+    try {
+      progress.show();
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      progress.dismiss();
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    progress.dismiss();
+    return false;
+  }
+
+  // Logout
   Future<void> logoutOut(BuildContext context) async {
     try {
       final List<UserInfo> providerData = (user).providerData;

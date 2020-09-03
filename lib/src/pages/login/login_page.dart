@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter_app_music_app/src/pages/login/widgets/register_form.dart';
 
 import './widgets/custom_widgets.dart';
 import 'package:flutter_app_music_app/src/utils/responsive.dart';
 import 'package:flutter_app_music_app/src/utils/services.dart';
+
+class LoginFormType {
+  static final int login = 0;
+  static final int register = 1;
+  static final int forgotPassword = 2;
+}
 
 class LoginPage extends StatefulWidget {
   static final String routeName = 'login';
@@ -14,6 +21,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
+  PageController _pageController = PageController(initialPage: 0);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _switchForm(int page) {
+    _pageController.animateToPage(
+      page,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.linear,
+    );
+  }
+
   @override
   void afterFirstLayout(BuildContext context) {
     final bool isTable = MediaQuery.of(context).size.shortestSide >= 600;
@@ -43,7 +66,32 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Welcome(),
-                        LoginForm(),
+                        Expanded(
+                          child: PageView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: _pageController,
+                            children: [
+                              LoginForm(
+                                onGoToRegister: () => _switchForm(
+                                  LoginFormType.register,
+                                ),
+                                onGoToForgotPassword: () => _switchForm(
+                                  LoginFormType.forgotPassword,
+                                ),
+                              ),
+                              RegisterForm(
+                                onGoToLogin: () => _switchForm(
+                                  LoginFormType.login,
+                                ),
+                              ),
+                              ForgotPasswordForm(
+                                onGoToLogin: () => _switchForm(
+                                  LoginFormType.login,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -68,7 +116,14 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
                       child: Container(
                         height: responsive.height,
                         child: Center(
-                          child: LoginPage(),
+                          child: LoginForm(
+                            onGoToRegister: () => _switchForm(
+                              LoginFormType.register,
+                            ),
+                            onGoToForgotPassword: () => _switchForm(
+                              LoginFormType.forgotPassword,
+                            ),
+                          ),
                         ),
                       ),
                     ),

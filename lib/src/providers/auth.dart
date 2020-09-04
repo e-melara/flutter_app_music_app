@@ -58,7 +58,8 @@ class Auth {
     } catch (e) {
       print(e);
       progress.dismiss();
-      //todo:pendiente la informacion de los errores con firebase
+      // ignore: todo
+      // TODO: pendiente la informacion de los errores con firebase
       // Dialogs.alert(context, title: "ERROR", description: e);
       return null;
     }
@@ -133,7 +134,8 @@ class Auth {
   }
 
   _providerService(String providerId) async {
-    //todo: agregar los demas tipos de logeo
+    // ignore: todo
+    // TODO: agregar los demas tipos de logeo
     switch (providerId) {
       case 'google.com':
         await _googleSignIn.signOut();
